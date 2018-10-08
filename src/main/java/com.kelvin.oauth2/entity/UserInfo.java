@@ -1,4 +1,4 @@
-package com.stubhub.kelvin.oauth2.entity;
+package com.kelvin.oauth2.entity;
 
 public class UserInfo {
     private String username;

@@ -1,6 +1,6 @@
-package com.stubhub.kelvin.oauth2;
+package com.kelvin.oauth2;
 
-import com.stubhub.kelvin.oauth2.filter.AuthValidationExceptionFilter;
+import com.kelvin.oauth2.filter.AuthValidationExceptionFilter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

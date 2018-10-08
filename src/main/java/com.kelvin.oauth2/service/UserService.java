@@ -1,6 +1,6 @@
-package com.stubhub.kelvin.oauth2.service;
+package com.kelvin.oauth2.service;
 
-import com.stubhub.kelvin.oauth2.entity.UserInfo;
+import com.kelvin.oauth2.entity.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;

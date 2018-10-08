@@ -1,4 +1,4 @@
-package com.stubhub.kelvin.oauth2.configuration;
+package com.kelvin.oauth2.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,12 +6,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        String finalPassword = bCryptPasswordEncoder.encode("123456");
         // password 方案三：支持多种编码，通过密码的前缀区分编码方式
         String finalPassword = "{bcrypt}" + bCryptPasswordEncoder.encode("123456");
+        String adminPassword = "{bcrypt}" + bCryptPasswordEncoder.encode("password");
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("admin").password(adminPassword).authorities("ADMIN").build());
         manager.createUser(User.withUsername("user_1").password(finalPassword).authorities("USER").build());
         manager.createUser(User.withUsername("user_2").password(finalPassword).authorities("USER").build());
         return manager;
@@ -70,11 +74,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http
-                .requestMatchers().anyRequest()
+        http.authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .logout().logoutUrl("/logout").deleteCookies("JSESSIONID").logoutSuccessUrl("/login")
+                .and()
+                .sessionManagement().sessionAuthenticationErrorUrl("/login")
+                .invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/login"))
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/oauth/**").permitAll();
+        /*http
+                .requestMatchers().anyRequest()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/oauth/**").permitAll()
+                .and()
+                .logout().logoutUrl("/logout").deleteCookies("JSESSIONID").logoutSuccessUrl("/login")
+                .and()
+                .sessionManagement().sessionAuthenticationErrorUrl("/login")
+                .invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/login"))
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);*/
         // @formatter:on
     }
 }

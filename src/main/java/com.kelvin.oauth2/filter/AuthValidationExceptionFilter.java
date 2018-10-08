@@ -1,6 +1,6 @@
-package com.stubhub.kelvin.oauth2.filter;
+package com.kelvin.oauth2.filter;
 
-import com.stubhub.kelvin.oauth2.service.AuthService;
+import com.kelvin.oauth2.service.AuthService;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +44,7 @@ public class AuthValidationExceptionFilter implements Filter {
                 Cookie[] cookies = request.getCookies();
                 boolean found = false;
                 for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("TEST")) {
+                    if (cookie.getName().equals("JSESSIONID")) {
                         found = true;
                         if (authService.validateCookie(cookie.getValue())) {
                             filterChain.doFilter(servletRequest, servletResponse);

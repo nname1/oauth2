@@ -1,10 +1,12 @@
-package com.stubhub.kelvin.oauth2.controller;
+package com.kelvin.oauth2.controller;
 
-import com.stubhub.kelvin.oauth2.entity.UserInfo;
-import com.stubhub.kelvin.oauth2.service.AuthService;
-import com.stubhub.kelvin.oauth2.service.UserService;
+import com.kelvin.oauth2.entity.UserInfo;
+import com.kelvin.oauth2.service.AuthService;
+import com.kelvin.oauth2.service.SessionService;
+import com.kelvin.oauth2.service.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,9 @@ public class TestEndpoints {
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    SessionService sessionService;
 
     @GetMapping("/product/{id}")
     public String getProduct(@PathVariable String id) {
@@ -42,7 +47,9 @@ public class TestEndpoints {
         Map<String,String> authMap = userService.authorizeUser(userInfo);
         JSONObject json_token = new JSONObject();
         if(!authMap.containsKey("error")&&authMap.containsKey("access_token")){
-            Cookie cookie = new Cookie("TEST","abc");
+            Cookie cookie = new Cookie("JSESSIONID",sessionService.getSessionId());
+            cookie.setMaxAge(50);
+            cookie.setHttpOnly(true);
             response.addCookie(cookie);
             json_token.put("Authorization",authMap.get("token_type")+" "+authMap.get("access_token"));
             json_token.put("userName",userInfo.getUsername());
@@ -61,7 +68,7 @@ public class TestEndpoints {
         boolean valid = false;
         if(cookies!=null){
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("TEST")) {
+                if (cookie.getName().equals("JSESSIONID")) {
                     if (authService.validateCookie(cookie.getValue())) {
                         valid = true;
                     }

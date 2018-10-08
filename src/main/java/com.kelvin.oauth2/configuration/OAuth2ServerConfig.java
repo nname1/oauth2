@@ -1,4 +1,4 @@
-package com.stubhub.kelvin.oauth2.configuration;
+package com.kelvin.oauth2.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
