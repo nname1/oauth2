@@ -18,6 +18,7 @@ import org.springframework.security.web.session.SimpleRedirectInvalidSessionStra
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
     @Bean
     @Override
     protected UserDetailsService userDetailsService() {
