@@ -68,17 +68,26 @@ public class TestEndpoints {
     public boolean validate(HttpServletRequest request,HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         boolean valid = false;
+        String jSesionCookie = "",key="";
         if(cookies!=null){
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("JSESSIONID")) {
-                    if (authService.validateCookie(cookie.getValue())) {
+                    jSesionCookie = cookie.getValue();
+                    if (authService.validateCookie(jSesionCookie)) {
                         valid = true;
                     }
                 }
             }
         }
-        if(request.getHeader("state")!=null&&!request.getHeader("state").isEmpty()&&redisService.getMap().containsKey(request.getHeader("state"))){
-            JSONObject jsonObject = redisService.getValue(request.getHeader("state"));
+
+        if(request.getHeader("state")!=null&&!request.getHeader("state").isEmpty()){
+            key=request.getHeader("state");
+        }else if(!jSesionCookie.isEmpty()){
+            key=jSesionCookie;
+        }
+
+        if(!key.isEmpty()&&redisService.getMap().containsKey(key)){
+            JSONObject jsonObject = redisService.getValue(key);
             response.setHeader("Authorization",jsonObject.getString("Authorization"));
             Cookie cookie = new Cookie("JSESSIONID",jsonObject.getString("JSESSIONID"));
             cookie.setHttpOnly(true);
