@@ -1,9 +1,12 @@
 package com.kelvin.oauth2.filter;
 
 import com.kelvin.oauth2.service.AuthService;
+import com.kelvin.oauth2.service.RedisService;
+import com.kelvin.oauth2.service.SessionService;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
@@ -20,6 +23,9 @@ public class AuthValidationExceptionFilter implements Filter {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    RedisService redisService;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         String excludedUrls = filterConfig.getInitParameter("excludedUrl");
@@ -33,6 +39,7 @@ public class AuthValidationExceptionFilter implements Filter {
         boolean isExcluded=true;
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         for (String path : excludedPathArray) {//判断是否在过滤url之外
             if (request.getServletPath().contains(path)) {
                 isExcluded = false;
@@ -70,7 +77,8 @@ public class AuthValidationExceptionFilter implements Filter {
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
             response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization, Cookie, Location, State");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization, Cookie, Location, State");
             filterChain.doFilter(servletRequest,servletResponse);
         }
     }
