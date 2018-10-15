@@ -77,8 +77,8 @@ public class AuthValidationExceptionFilter implements Filter {
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
             response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization, Cookie, Location, State");
-            response.setHeader("Access-Control-Expose-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization, Cookie, Location, State");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization, Cookie, Location, State, UserName");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Type, Accept, X-Requested-With, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Max-Age, Authorization, Cookie, Location, State, UserName");
             filterChain.doFilter(servletRequest,servletResponse);
         }
     }

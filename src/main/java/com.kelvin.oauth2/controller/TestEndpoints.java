@@ -83,9 +83,7 @@ public class TestEndpoints {
             Cookie cookie = new Cookie("JSESSIONID",jsonObject.getString("JSESSIONID"));
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
-            Cookie cookie2 = new Cookie("UserName",jsonObject.getString("userName"));
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie2);
+            response.setHeader("UserName",jsonObject.getString("userName"));
             //redisService.remove(request.getHeader("state"));
         }else{
             response.setHeader("State",sessionService.getSessionId());
