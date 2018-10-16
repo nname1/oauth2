@@ -50,14 +50,16 @@ public class AuthValidationExceptionFilter implements Filter {
             try {
                 Cookie[] cookies = request.getCookies();
                 boolean found = false;
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("JSESSIONID")) {
-                        found = true;
-                        if (authService.validateCookie(cookie.getValue())) {
-                            filterChain.doFilter(servletRequest, servletResponse);
-                        } else {
-                            response.setStatus(401);
-                            response.sendError(401, "You are not authorized");
+                if(cookies!=null){
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equals("JSESSIONID")) {
+                            found = true;
+                            if (authService.validateCookie(cookie.getValue())) {
+                                filterChain.doFilter(servletRequest, servletResponse);
+                            } else {
+                                response.setStatus(401);
+                                response.sendError(401, "You are not authorized");
+                            }
                         }
                     }
                 }
