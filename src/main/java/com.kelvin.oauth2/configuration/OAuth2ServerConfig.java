@@ -38,7 +38,7 @@ public class OAuth2ServerConfig {
         public void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll()
-                    .antMatchers("/order/**").authenticated();//配置order访问控制，必须认证过后才可以访问
+                    .antMatchers("/order/**").access("#oauth2.hasScope('select')");//配置order访问控制，必须认证过后才可以访问
         }
     }
 
@@ -71,7 +71,7 @@ public class OAuth2ServerConfig {
                     .secret(finalSecret)
                     .and().withClient("client_2")
                     .resourceIds(DEMO_RESOURCE_ID)
-                    .authorizedGrantTypes("password", "refresh_token")
+                    .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
                     .scopes("select")
                     .authorities("oauth2")
                     .secret(finalSecret);

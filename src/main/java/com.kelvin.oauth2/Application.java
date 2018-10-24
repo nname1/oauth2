@@ -19,7 +19,7 @@ public class Application {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new AuthValidationExceptionFilter());
         registration.addUrlPatterns("/*");
-        registration.addInitParameter("excludedUrl", "/login,/validate,/oauth/token,/order");
+        registration.addInitParameter("excludedUrl", "/login,/validate,/oauth/token,/order,/oauth/authorize");
         registration.setName("authValidationExceptionFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;
